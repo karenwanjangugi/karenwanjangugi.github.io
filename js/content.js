@@ -21,7 +21,7 @@ const PROJECTS=[
   {name:'Movie Recommender',slug:'movie-recommender',kind:'AI · NLP',status:'Built',c:[4,5],text:'A witty recommender that suggests movies from a plain-language description of what you feel like watching.',tags:['NLP','ChromaDB','Sentence Transformers'],
    links:[['GitHub','https://github.com/karenwanjangugi/movie-recomender']]},
   {name:'City Soul Experience',slug:'citysoul',kind:'Web',status:'Built',c:[2,1],text:'The website for a Nairobi experiential entertainment agency.',tags:['React','Front end'],
-   links:[['GitHub','https://github.com/karenwanjangugi/city-soul']]},
+   links:[['Live site','https://www.citysoulexperience.com/'],['GitHub','https://github.com/karenwanjangugi/city-soul']]},
 ];
 const STOPS=[
   ['Step 1','Explore','Every project starts with questions. Who is this for, and what would make their day easier?'],
