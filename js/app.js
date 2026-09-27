@@ -187,11 +187,37 @@ const copy=$('copy'), email=$('email');
 const sel=el=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)};
 copy.addEventListener('click',()=>{try{navigator.clipboard.writeText(email.textContent).then(()=>{copy.textContent='Copied!';setTimeout(()=>copy.textContent='Copy',1500)},()=>{sel(email);copy.textContent='Selected'})}catch(e){sel(email);copy.textContent='Selected'}});
 const form=$('form'), note=$('note');
-form.addEventListener('submit',e=>{e.preventDefault();
-  const text=`From: ${form.fname.value.trim()} <${form.femail.value.trim()}>\n\n${form.fmsg.value.trim()}`;
-  note.hidden=false; note.innerHTML='<b>Your message is ready.</b> Email it to karenwanngugi@gmail.com. It\'s copied if your browser allowed it:<code></code>'; note.querySelector('code').textContent=text;
-  try{navigator.clipboard.writeText(text).catch(()=>{})}catch(err){}
-  const r=form.getBoundingClientRect(); burst(r.left+r.width/2,r.bottom-40,30); say("Sent my way! I'll write back soon.");
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+
+  const formData=new FormData(form);
+
+  try{
+    const response=await fetch('https://formspree.io/f/mgavprke',{
+      method:'POST',
+      body:formData,
+      headers:{
+        'Accept':'application/json'
+      }
+    });
+
+    if(response.ok){
+      note.hidden=false;
+      note.innerHTML='<b>Message sent!</b> Thanks for reaching out — I\'ll get back to you soon.';
+      form.reset();
+
+      const r=form.getBoundingClientRect();
+      burst(r.left+r.width/2,r.bottom-40,30);
+      say("Sent my way! I'll write back soon.");
+    }else{
+      note.hidden=false;
+      note.innerHTML='<b>Something went wrong.</b> Please try again or email me directly.';
+    }
+  }catch(err){
+    note.hidden=false;
+    note.innerHTML='<b>Something went wrong.</b> Please check your connection and try again.';
+  }
 });
 
 /* ---------- particles per world ---------- */
