@@ -12,9 +12,8 @@
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-  <filter id="rough" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="1"><animate attributeName="seed" values="1;4;7" dur="[...]
-  <filter id="spray" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.5" xChannelSelector="R" yChannelSelector="G" result="art"/><feMorphology in="SourceAlpha" operator="dilate" radius="5" result="d"/><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="1" seed="9" result="sp"/><feColorMatrix in="sp" values="0 0 0 0 1  0 0 0 0 0.18  0 0 0 0 0.6  7 0 0 0 -4.5" result="spk"/><feComposite in="spk" in2="d" operator="in" result="halo"/><feGaussianBlur in="art" stdDeviation="3.5" result="gl"/><feColorMatrix in="gl" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 .28 0" result="gl2"/><feMerge><feMergeNode in="halo"/><feMergeNode in="gl2"/><feMergeNode in="art"/></feMerge>
-  </filter>
+  <filter id="rough" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="1"><animate attributeName="seed" values="1;4;7" dur="0.45s" calcMode="discrete" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+  <filter id="spray" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.5"/></filter>
 
   <filter id="f-clay" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
     <feGaussianBlur in="SourceAlpha" stdDeviation="3.5" result="b"/>
@@ -41,7 +40,7 @@
     <feOffset in="SourceAlpha" dx="3" dy="2" result="o"/>
     <feFlood flood-color="#00D1C1" result="c"/>
     <feComposite in="c" in2="o" operator="in" result="mis"/>
-    <feImage href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%277%27%20height%3D%277%27%3E%3Ccircle%20cx%3D%273.5%27%20cy%3D%273.5%27%20r%3D%271.7%27%20[...]
+    <feImage href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%277%27%20height%3D%277%27%3E%3Ccircle%20cx%3D%273.5%27%20cy%3D%273.5%27%20r%3D%271.7%27%20fill%3D%27%23111%27/%3E%3C/svg%3E" x="0" y="0" width="7" height="7" result="dot"/>
     <feTile in="dot" result="dots"/>
     <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="b"/>
     <feDiffuseLighting in="b" surfaceScale="5" diffuseConstant="1" result="L"><feDistantLight azimuth="225" elevation="45"/></feDiffuseLighting>
@@ -66,7 +65,7 @@
     <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="b"/>
     <feDiffuseLighting in="b" surfaceScale="6" diffuseConstant="1.1" result="L"><feDistantLight azimuth="225" elevation="40"/></feDiffuseLighting>
     <feColorMatrix in="L" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1.4 0 0 0 0.85" result="dk"/>
-    <feImage href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%276%27%20height%3D%276%27%3E%3Cpath%20d%3D%27M-1%201%20L1%20-1%20M0%206%20L6%200%20M5%207%[...]
+    <feImage href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%276%27%20height%3D%276%27%3E%3Cpath%20d%3D%27M-1%201%20L1%20-1%20M0%206%20L6%200%20M5%207%20L7%205%27%20stroke%3D%27%23140E1C%27%20stroke-width%3D%271.1%27/%3E%3C/svg%3E" x="0" y="0" width="6" height="6" result="h"/>
     <feTile in="h" result="hh"/>
     <feComposite in="hh" in2="dk" operator="in" result="hd"/>
     <feComposite in="hd" in2="SourceAlpha" operator="in" result="hi"/>
@@ -79,7 +78,7 @@
     <feTurbulence type="fractalNoise" baseFrequency="0.035 0.9" numOctaves="2" seed="5" result="st"/>
     <feColorMatrix in="st" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.2 0 0 0 1.8" result="mask"/>
     <feComposite in="SourceGraphic" in2="mask" operator="in" result="tex"/>
-    <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="1" result="w"><animate attributeName="seed" values="1;4;7" dur="0.45s" calcMode="discrete" repeatCount="indefinite"[...]
+    <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="1" result="w"><animate attributeName="seed" values="1;4;7" dur="0.45s" calcMode="discrete" repeatCount="indefinite"/></feTurbulence>
     <feDisplacementMap in="tex" in2="w" scale="3" xChannelSelector="R" yChannelSelector="G" result="a"/>
     <feOffset in="a" dx="1.5" dy="-1.2" result="ghost"/>
     <feColorMatrix in="ghost" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 .35 0" result="g2"/>
@@ -104,12 +103,12 @@
     <feDropShadow in="o" dx="0" dy="3" stdDeviation="2.5" flood-color="#E0559A" flood-opacity=".22"/>
   </filter>
   <filter id="f-ink" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
-    <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="1" result="w"><animate attributeName="seed" values="1;4;7" dur="0.5s" calcMode="discrete" repeatCount="indefinite"[...]
+    <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="1" result="w"><animate attributeName="seed" values="1;4;7" dur="0.5s" calcMode="discrete" repeatCount="indefinite"/></feTurbulence>
     <feDisplacementMap in="SourceGraphic" in2="w" scale="2.2" xChannelSelector="R" yChannelSelector="G" result="a"/>
     <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="b"/>
     <feDiffuseLighting in="b" surfaceScale="6" diffuseConstant="1.1" result="L"><feDistantLight azimuth="225" elevation="42"/></feDiffuseLighting>
     <feColorMatrix in="L" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1.5 0 0 0 1" result="dk"/>
-    <feImage href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%275%27%20height%3D%275%27%3E%3Cpath%20d%3D%27M-1%201%20L1%20-1%20M0%205%20L5%200%20M4%206[...]
+    <feImage href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%275%27%20height%3D%275%27%3E%3Cpath%20d%3D%27M-1%201%20L1%20-1%20M0%205%20L5%200%20M4%206%20L6%204%27%20stroke%3D%27%231E1E1E%27%20stroke-width%3D%27.9%27/%3E%3C/svg%3E" x="0" y="0" width="5" height="5" result="h"/>
     <feTile in="h" result="hh"/>
     <feComposite in="hh" in2="dk" operator="in" result="hd"/>
     <feComposite in="hd" in2="a" operator="in" result="hi"/>
@@ -210,8 +209,8 @@
       <h2 id="contactTitle"></h2>
       <p id="contactText"></p>
       <div class="emailrow"><span id="email">karenwanngugi@gmail.com</span><button class="btn alt" id="copy" type="button">Copy</button></div>
-      <div class="plinks"><a href="https://www.linkedin.com/in/karen-ngugi-b0946b355/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://github.com/karenwanjangugi" target="_blank" rel="noopener">GitHub ↗</a></div>
-      <form id="form" action="https://formspree.io/f/mgavprke" method="POST">
+      <div class="plinks"><a href="https://www.linkedin.com/in/karen-ngugi-b0946b355/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://github.com/karenwanjangugi" target="_blank" rel="noopener">GitHub ↗</a><span>Open to freelance work</span></div>
+      <form id="form">
         <label for="fname">Your name<input id="fname" name="fname" required placeholder="Your name"></label>
         <label for="femail">Your email<input id="femail" name="femail" type="email" required placeholder="you@example.com"></label>
         <label for="fmsg">Message<textarea id="fmsg" name="fmsg" required placeholder="Hi Karen, I'd love to talk about..."></textarea></label>
@@ -226,7 +225,7 @@
 </div>
 
 <nav class="trail" id="trail" aria-label="Page stops"></nav>
-<button class="portal-btn" id="portalBtn" type="button" aria-haspopup="dialog" aria-label="Change world"><span class="porb" aria-hidden="true"></span><span class="ptxt"><small>World</small><b id="portalLbl"></b></span></button>
+<button class="portal-btn" id="portalBtn" type="button" aria-haspopup="dialog" aria-label="Change world"><span class="porb" aria-hidden="true"></span><span class="ptxt"><small>World</small><b id="portalLbl">Worlds</b></span><span class="caret" aria-hidden="true">▾</span></button>
 
 <div class="guide" id="guide">
   <button class="head slot" id="guideHead" type="button" aria-label="Ask your guide for a hint"></button>
