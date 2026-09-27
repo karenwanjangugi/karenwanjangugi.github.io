@@ -13,20 +13,20 @@ const sections=[...document.querySelectorAll('[data-stop]')];
 let cur=-1, hintMode=false, cards=[];
 
 /* ---------- surface textures per world ---------- */
-const nz=({type='fractalNoise',f='.8',o=2,m,size=180,seed=1})=>`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}'><filter id='n${seed}'><feTurbulence type='${type}' baseFrequency='${f}' numOctaves='${o}' seed='${seed}'/><feColorMatrix in='SourceGraphic' type='matrix' values='${m}'/></filter></svg>`) }")`;
+const nz=({type='fractalNoise',f='.8',o=2,m,size=180,seed=1})=>`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}'><filter id='n' x='0' y='0' width='100%' height='100%'><feTurbulence type='${type}' baseFrequency='${f}' numOctaves='${o}' seed='${seed}' stitchTiles='stitch'/><feColorMatrix values='${m}'/></filter><rect width='100%' height='100%' filter='url(#n)'/></svg>`)}")`;
 const DK=(a,b)=>`0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ${a} 0 0 0 ${b}`, LT=(a,b)=>`0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 ${a} 0 0 0 ${b}`, CL=(r,g,bl,a,b)=>`0 0 0 0 ${r} 0 0 0 0 ${g} 0 0 0 0 ${bl} ${a} 0 0 0 ${b}`;
 const grainD=(a=.9)=>nz({f:'.9',m:DK(a,-a*.42)}), grainL=(a=.8)=>nz({f:'.9',m:LT(a,-a*.45),seed:3});
 const fibers=(c='LT')=>nz({type:'turbulence',f:'0.012 0.2',o:2,size:300,seed:6,m:c==='LT'?LT(-3.2,.85):CL(.45,.3,.15,-3,.6)});
 const TEX={
   anthro:{tex:[nz({type:'turbulence',f:'0.008 0.016',o:2,size:420,seed:2,m:LT(-4.2,1.05)}),grainL(.5)].join(','),op:.45,ctex:grainD(.45)},
   kawaii:{tex:[fibers(),grainD(.3),'radial-gradient(circle,rgba(255,255,255,.9) 3px,transparent 3.6px) 0 0/28px 28px'].join(','),op:.7,ctex:[fibers(),grainD(.35)].join(',')},
-  kitsch:{tex:'radial-gradient(circle,#FFE600 2.2px,transparent 2.8px) 0 0/16px 16px,repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px)',op:.4,ctex:'radial-gradient(circle,#fff 1px,transparent 2px) 0 0/22px 22px, repeating-linear-gradient(0deg, rgba(0,0,0,.18), rgba(0,0,0,.18) 1px, transparent 1px, transparent 4px)'},
+  kitsch:{tex:'radial-gradient(circle,#FFE600 2.2px,transparent 2.8px) 0 0/16px 16px,repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px)',op:.4,ctex:'radial-gradient(circle,rgba(0,0,0,.14) 1.3px,transparent 1.7px) 0 0/6px 6px'},
   graffiti:{tex:[grainD(1.1),nz({f:'.02',o:3,size:400,seed:8,m:DK(1.2,-.5)}),grainL(.6)].join(','),op:.55,ctex:[grainD(.8),nz({f:'1.4',o:1,seed:9,m:CL(1,.18,.6,6,-4.2)})].join(',')},
-  gothic:{tex:[nz({f:'.012',o:3,size:420,seed:4,m:DK(1.3,-.55)}),grainD(.9),'radial-gradient(ellipse at 50% 40%,transparent 50%,rgba(0,0,0,.55))'].join(','),op:.8,ctex:[nz({f:'.02',o:3,size:360,seed:7,m:CL(.55,.2,.05,3,-1.2)}),grainD(.8)].join(',')},
+  gothic:{tex:[nz({f:'.012',o:3,size:420,seed:4,m:DK(1.3,-.55)}),grainD(.9),'radial-gradient(ellipse at 50% 40%,transparent 50%,rgba(0,0,0,.55))'].join(','),op:.8,ctex:[nz({f:'.02',o:3,size:360,seed:5,m:CL(.35,.22,.1,1.2,-.5)}),grainD(.5)].join(',')},
   doodle:{tex:['linear-gradient(#DCE6F7 1px,transparent 1px) 0 0/28px 28px','linear-gradient(90deg,#DCE6F7 1px,transparent 1px) 0 0/28px 28px',grainD(.35)].join(','),op:1,ctex:grainD(.4)},
-  medieval:{tex:[nz({f:'.006',o:3,size:520,seed:12,m:CL(.45,.3,.12,1.5,-.62)}),fibers('CL'),grainD(.5),'radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(90,55,20,.35))'].join(','),op:.85,ctex:[fibers('CL'),grainD(.45)].join(',')},
-  pixel:{tex:['radial-gradient(circle,#fff 1px,transparent 1.5px) 0 0/90px 70px','radial-gradient(circle,#FFD23F 1px,transparent 1.5px) 40px 30px/130px 110px','repeating-linear-gradient(0deg,rgba(0,0,0,.15) 0,rgba(0,0,0,.15) 1px,transparent 1px,transparent 8px)'].join(','),op:1,ctex:'radial-gradient(circle, rgba(255,255,255,.8) 1px, transparent 1.6px) 0 0/12px 12px'},
-  y2k:{tex:['linear-gradient(115deg,rgba(255,154,216,.45),rgba(159,243,255,.45) 30%,rgba(184,166,255,.45) 60%,rgba(255,227,138,.4))','radial-gradient(circle,rgba(255,255,255,.95) 1.5px,transparent 2.2px) 0 0/18px 18px','linear-gradient(0deg,rgba(0,0,0,.12),rgba(0,0,0,.12))'].join(','),op:.85,ctex:'radial-gradient(circle,#fff 1px,transparent 2px) 0 0/18px 18px'}
+  medieval:{tex:[nz({f:'.006',o:3,size:520,seed:12,m:CL(.45,.3,.12,1.5,-.62)}),fibers('CL'),grainD(.5),'radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(90,55,20,.35))'].join(','),op:.85,ctex:[nz({f:'.015',o:3,size:360,seed:13,m:CL(.45,.3,.12,1.4,-.6)}),grainD(.45)].join(',')},
+  pixel:{tex:['radial-gradient(circle,#fff 1px,transparent 1.5px) 0 0/90px 70px','radial-gradient(circle,#FFD23F 1px,transparent 1.5px) 40px 30px/130px 110px','repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 1px,transparent 1px 3px)','repeating-conic-gradient(rgba(255,255,255,.035) 0 25%,transparent 0 50%) 0 0/4px 4px'].join(','),op:.8,ctex:'repeating-conic-gradient(rgba(255,255,255,.05) 0 25%,transparent 0 50%) 0 0/4px 4px,repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px)'},
+  y2k:{tex:['linear-gradient(115deg,rgba(255,154,216,.45),rgba(159,243,255,.45) 30%,rgba(184,166,255,.45) 60%,rgba(255,227,138,.4))','radial-gradient(circle,rgba(255,255,255,.95) 1.5px,transparent 2px) 0 0/60px 60px'].join(','),op:.6,ctex:'linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,0) 38%),linear-gradient(115deg,rgba(255,154,216,.16),rgba(159,243,255,.16) 50%,rgba(184,166,255,.16))'},
 };
 function applyTex(k){const t=TEX[k];root.style.setProperty('--tex',t.tex);root.style.setProperty('--tex-op',t.op);root.style.setProperty('--ctex',t.ctex)}
 function setWorld(k){
@@ -39,15 +39,15 @@ function setWorld(k){
   $('cta1').textContent=D.cta[0]; $('cta2').textContent=D.cta[1];
   paintAvatars();
   $('crewTitle').textContent=D.crewTitle; $('crewIntro').textContent=D.crewIntro;
-  $('roster').innerHTML=CREW.map((m,i)=>{const [who,art,say]=CAST[k][i];return `<article class="mate" tabindex="0"><div class="tb"><span>● ${who}</span><i></i><i></i><i></i></div><span class="sa[...]
+  $('roster').innerHTML=CREW.map((m,i)=>{const [who,art,say]=CAST[k][i];return `<article class="mate" tabindex="0"><div class="tb"><span>● ${who}</span><i></i><i></i><i></i></div><span class="say">${say}</span>
     <div class="pic" style="background:${T.tile(P(m.c),P(m.c+2))}"><div class="slot">${ART[art](P(m.c+1))}</div></div>
     <span class="who">${who}</span><span class="job">${m.job}</span><p>${m.text}</p><div class="tags">${m.tags.map(t=>`<span>${t}</span>`).join('')}</div></article>`}).join('');
   const proj=$('s3'); proj.classList.toggle('pan',D.proj==='pan');
   $('strip').innerHTML=`<div class="intro-panel"><span class="eyebrow">${D.eb[3]}</span><h2>${D.projTitle}</h2><p>${D.projIntro}</p><span class="hint">${D.hint}</span></div>`+
     PROJECTS.map((p,i)=>`<article class="chest"><div class="tb"><span>${p.slug}.exe</span><i></i><i></i><i></i></div>
-      <div class="art" style="background:${T.tile(P(p.c[0]),P(p.c[1]))}"><span class="num">${D.num(i)}</span><span class="status">${p.status}</span><div class="slot">${ART[CAST[k][PROJ_ROLE[i]][1]](P(p.c[0]+1))}</div></div>
+      <div class="art" style="background:${T.tile(P(p.c[0]),P(p.c[1]))}"><span class="num">${D.num(i)}</span><span class="status">${p.status}</span><div class="slot">${ART[CAST[k][PROJ_ROLE[i]][1]](P(p.c[1]+2))}</div></div>
       <div><h3>${p.name}</h3><span class="kind">${p.kind}</span></div>
-      <div><p>${p.text}</p><div class="tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div><div class="plinks">${(p.links||[]).map(([l,u])=>`<a href="${u}" target="_blank" rel="noopener">${l}</a>`).join('')}</div></div></article>`).join('');
+      <div><p>${p.text}</p><div class="tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div><div class="plinks">${(p.links||[]).map(([l,u])=>`<a href="${u}" target="_blank" rel="noopener">${l} ↗</a>`).join('')}</div></div></article>`).join('');
   $('pathTitle').textContent=D.pathTitle;
   $('stackTrack').innerHTML=(STACK.map(n=>`<span class="chip"><i></i>${n}</span>`).join('')).repeat(2);
   $('stops').innerHTML=STOPS.map(([t,h,p])=>`<li class="stop"><span class="dot"></span><span class="tag">${t}</span><h3>${h}</h3><p>${p}</p></li>`).join('');
@@ -77,8 +77,7 @@ function pixelate(){
     const cw=big?84:svg.closest('.gem')?20:52, ch=Math.round(cw*vb.height/vb.width);
     const img=new Image();
     img.onload=()=>{ if(!svg.isConnected||W!=='pixel') return;
-      const c=document.createElement('canvas'); c.width=cw; c.height=ch; const x=c.getContext('2d'); x.imageSmoothingEnabled=false; x.drawImage(img,0,0,cw,ch); dither(x,cw,ch); svg.replaceWith(c);
-    };
+      const c=document.createElement('canvas'); c.width=cw; c.height=ch; const x=c.getContext('2d'); x.imageSmoothingEnabled=false; x.drawImage(img,0,0,cw,ch); dither(x,cw,ch); svg.replaceWith(c); };
     img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(svg));
   });
 }
@@ -90,17 +89,17 @@ function dither(x,w,h){const d=x.getImageData(0,0,w,h),a=d.data;
   x.putImageData(d,0,0)}
 /* ---------- guide ---------- */
 const line=$('line'), bubble=$('bubble'), count=$('count'); let tuckT;
-function say(t,ms=5500){line.textContent=t;bubble.classList.remove('pop','tuck');void bubble.offsetWidth;bubble.classList.add('pop');clearTimeout(tuckT);tuckT=setTimeout(()=>bubble.classList.add('tuck'),ms);}
+function say(t,ms=5500){line.textContent=t;bubble.classList.remove('pop','tuck');void bubble.offsetWidth;bubble.classList.add('pop');clearTimeout(tuckT);tuckT=setTimeout(()=>bubble.classList.add('tuck'),ms)}
 $('guideHead').addEventListener('click',e=>{
   hintMode=true; burst(e.clientX,e.clientY,12); const D=WORLDS[W], n=found[W].size;
-  say(n<5?`Psst! 5 ${D.coll[1]} are hidden in this world. You've found ${n}. Check the top of the page, my picture, the crew, the path and the contact card.`:`You found every ${D.coll[0]} and won the prize!`);
+  say(n<5?`Psst! 5 ${D.coll[1]} are hidden in this world. You've found ${n}. Check the top of the page, my picture, the crew, the path and the contact card.`:`You found every ${D.coll[0]} and won ${PRIZES[W][0]}! Each world has a different prize. Go explore!`,8000);
   setTimeout(()=>hintMode=false,8000);
 });
 document.querySelectorAll('.gem').forEach(g=>g.addEventListener('click',e=>{
   const D=WORLDS[W]; found[W].add(+g.dataset.g); g.classList.add('got'); burst(e.clientX,e.clientY,26);
   const n=found[W].size; count.textContent=`${cap(D.coll[1])} found: ${n} / 5`;
   say(n<5?`You found a ${D.coll[0]}! ${5-n} more to go. There's a prize at the end.`:`That's all five ${D.coll[1]}! Prize time!`);
-  if(n===5){ golden[W]=true; setTimeout(()=>{paintAvatars();$('rewardTitle').textContent=`Prize unlocked: ${PRIZES[W][0]}`;$('rewardDesc').textContent=`All 5 ${D.coll[1]} found! ${PRIZES[W][1]}`;$('reward').hidden=false;},150); }
+  if(n===5){ golden[W]=true; setTimeout(()=>{paintAvatars();$('rewardTitle').textContent=`Prize unlocked: ${PRIZES[W][0]}`;$('rewardDesc').textContent=`All 5 ${D.coll[1]} found! ${PRIZES[W][1]}`;$('reward').hidden=false;$('closeReward').focus()},800); }
 }));
 $('closeReward').addEventListener('click',()=>{$('reward').hidden=true});
 
@@ -112,7 +111,7 @@ function openPortal(){
   const keepT=T, keepW=W;
   $('isles').innerHTML=ORDER.map((k,i)=>{T=STYLE[k];W=k;const D=WORLDS[k];const art=ART[CAST[k][1][1]](P(i+1));
     return `<button class="isle${k===keepW?' cur':''}" type="button" data-w="${k}" style="background:${D.preview}">${k===keepW?'<span class="here">YOU ARE HERE</span>':''}
-      <span class="pv">${art}</span><span style="background:rgba(10,8,30,.8);border-radius:14px;padding:10px 12px"><b style="font-family:'${D.font}',var(--mono)">${D.title}</b><small>${D.style}</small></span></button>`}).join('');
+      <span class="pv">${art}</span><span style="background:rgba(10,8,30,.8);border-radius:14px;padding:10px 12px"><b style="font-family:'${D.font}',var(--mono)">${D.title}</b><small>${D.style} · ${D.tag}</small></span></button>`}).join('');
   T=keepT; W=keepW;
   portal.hidden=false; $('portalClose').focus();
 }
@@ -166,7 +165,7 @@ function buildDots(){
   dots.innerHTML=panels.map((_,i)=>`<button type="button" aria-label="Go to panel ${i+1}"></button>`).join('')+'<span>Swipe →</span>';
   const btns=[...dots.querySelectorAll('button')];
   btns.forEach((b,i)=>b.addEventListener('click',()=>strip.scrollTo({left:panels[i].offsetLeft-20,behavior:reduce?'auto':'smooth'})));
-  const sync=()=>{const c=strip.scrollLeft+strip.clientWidth/2;let k=0;panels.forEach((p,i)=>{if(p.offsetLeft<=c)k=i});btns.forEach((b,i)=>b.classList.toggle('on',i===k));dots.querySelector('span').classList.toggle('on',panels.length>0)};
+  const sync=()=>{const c=strip.scrollLeft+strip.clientWidth/2;let k=0;panels.forEach((p,i)=>{if(p.offsetLeft<=c)k=i});btns.forEach((b,i)=>b.classList.toggle('on',i===k));dots.querySelector('span').hidden=k>0};
   strip.onscroll=sync; sync();
 }
 
@@ -175,7 +174,7 @@ function bindDrag(){
   if(W!=='y2k') return; let z=5;
   document.querySelectorAll('.chest .tb').forEach(tb=>{
     const win=tb.parentElement; let sx,sy,ox=0,oy=0,drag=false;
-    tb.addEventListener('pointerdown',e=>{ if(innerWidth<=820) return; drag=true; sx=e.clientX; sy=e.clientY; const m=(win.style.translate||'0px 0px').split(' '); ox=parseFloat(m[0])||0; oy=parseFloat(m[1])||0; tb.setPointerCapture(e.pointerId); });
+    tb.addEventListener('pointerdown',e=>{ if(innerWidth<=820) return; drag=true; sx=e.clientX; sy=e.clientY; const m=(win.style.translate||'0px 0px').split(' '); ox=parseFloat(m[0])||0; oy=parseFloat(m[1])||0; win.style.zIndex=++z; tb.setPointerCapture(e.pointerId); tb.style.cursor='grabbing'; });
     tb.addEventListener('pointermove',e=>{ if(!drag) return; win.style.translate=`${ox+e.clientX-sx}px ${oy+e.clientY-sy}px`; });
     tb.addEventListener('pointerup',()=>{drag=false;tb.style.cursor=''});
   });
@@ -186,28 +185,13 @@ const cs=$('s5'), lure=$('lure');
 cs.addEventListener('pointermove',e=>{const r=cs.getBoundingClientRect();lure.style.left=(e.clientX-r.left)+'px';lure.style.top=(e.clientY-r.top)+'px'});
 const copy=$('copy'), email=$('email');
 const sel=el=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)};
-copy.addEventListener('click',()=>{try{navigator.clipboard.writeText(email.textContent).then(()=>{copy.textContent='Copied!';setTimeout(()=>copy.textContent='Copy',1500)},()=>{sel(email);copy.textContent='Selected';setTimeout(()=>copy.textContent='Copy',1500)});}catch(err){sel(email);copy.textContent='Selected';setTimeout(()=>copy.textContent='Copy',1500)}});
+copy.addEventListener('click',()=>{try{navigator.clipboard.writeText(email.textContent).then(()=>{copy.textContent='Copied!';setTimeout(()=>copy.textContent='Copy',1500)},()=>{sel(email);copy.textContent='Selected'})}catch(e){sel(email);copy.textContent='Selected'}});
 const form=$('form'), note=$('note');
-form.addEventListener('submit', async e=>{
-  e.preventDefault();
-  note.hidden=false;
-  note.innerHTML='<b>Sending…</b> Please wait while your message is sent.';
-  const data=new FormData(form);
-  try {
-    const res=await fetch(form.action,{method:'POST',body:data,headers:{'Accept':'application/json'}});
-    if(res.ok){
-      note.innerHTML='<b>Message sent.</b> Your message is on its way to Karen.';
-      form.reset();
-      const r=form.getBoundingClientRect(); burst(r.left+r.width/2,r.bottom-40,30); say("Message sent! I'll write back soon.");
-    } else {
-      throw new Error('Form submission failed');
-    }
-  } catch (err) {
-    note.innerHTML='<b>Message not sent.</b> Please copy the message manually or try again.';
-    const text=`From: ${form.fname.value.trim()} <${form.femail.value.trim()}>\n\n${form.fmsg.value.trim()}`;
-    try{navigator.clipboard.writeText(text).catch(()=>{})}catch(err){}
-    say("Message not sent. Please copy it manually.");
-  }
+form.addEventListener('submit',e=>{e.preventDefault();
+  const text=`From: ${form.fname.value.trim()} <${form.femail.value.trim()}>\n\n${form.fmsg.value.trim()}`;
+  note.hidden=false; note.innerHTML='<b>Your message is ready.</b> Email it to karenwanngugi@gmail.com. It\'s copied if your browser allowed it:<code></code>'; note.querySelector('code').textContent=text;
+  try{navigator.clipboard.writeText(text).catch(()=>{})}catch(err){}
+  const r=form.getBoundingClientRect(); burst(r.left+r.width/2,r.bottom-40,30); say("Sent my way! I'll write back soon.");
 });
 
 /* ---------- particles per world ---------- */
@@ -215,14 +199,14 @@ const cv=$('fx'), cx=cv.getContext('2d'); let Wd,Ht; const ps=[];
 function size(){const d=Math.min(devicePixelRatio||1,2);Wd=innerWidth;Ht=innerHeight;cv.width=Wd*d;cv.height=Ht*d;cx.setTransform(d,0,0,d,0,0)}
 size(); addEventListener('resize',size);
 const FALL={petal:1,confetti:1,gold:1};
-function add(x,y,big){const f=WORLDS[W].fx, down=FALL[f];ps.push({x,y,r:(big?3:2)+Math.random()*(big?7:4),vy:(down?-1:1)*(.5+Math.random()*1.4),vx:(Math.random()-.5)*(f==='spray'?1.6:.4),ph:Math.random()*Math.PI*2,rot:Math.random()*Math.PI*2,c:['#F7C8E0','#9FE6FF','#FFD166','#B8F2E6','#F4A261'][Math.floor(Math.random()*5)]})}
+function add(x,y,big){const f=WORLDS[W].fx, down=FALL[f];ps.push({x,y,r:(big?3:2)+Math.random()*(big?7:4),vy:(down?-1:1)*(.5+Math.random()*1.4),vx:(Math.random()-.5)*(f==='spray'?1.6:.4),ph:Math.random()*6,rot:Math.random()*6,c:P(Math.floor(Math.random()*6)),life:1})}
 function burst(x,y,n){if(reduce)return;for(let i=0;i<n;i++)add(x+(Math.random()-.5)*50,y+(Math.random()-.5)*40,true)}
 let last=0; addEventListener('pointermove',e=>{const t=performance.now();if(t-last>55){last=t;add(e.clientX,e.clientY,false)}});
 function drawP(p){
   const f=WORLDS[W].fx, x=p.x+Math.sin(p.ph)*2.2, y=p.y, r=p.r;
   cx.save(); cx.translate(x,y);
   switch(f){
-    case 'bubble': cx.beginPath();cx.arc(0,0,r,0,7);cx.strokeStyle='rgba(246,253,255,.8)';cx.lineWidth=1.6;cx.stroke();cx.fillStyle='rgba(191,241,255,.14)';cx.fill();cx.beginPath();cx.arc(-r*.35,-r*.25,r*.35,0,7);cx.fillStyle='rgba(255,255,255,.14)';cx.fill();break;
+    case 'bubble': cx.beginPath();cx.arc(0,0,r,0,7);cx.strokeStyle='rgba(246,253,255,.8)';cx.lineWidth=1.6;cx.stroke();cx.fillStyle='rgba(191,241,255,.14)';cx.fill();cx.beginPath();cx.arc(-r*.35,-r*.35,r*.25,0,7);cx.fillStyle='#fff';cx.fill();break;
     case 'heart': cx.scale(r/6,r/6);cx.beginPath();cx.moveTo(0,3);cx.bezierCurveTo(-6,-2,-3,-7,0,-3);cx.bezierCurveTo(3,-7,6,-2,0,3);cx.fillStyle=p.c;cx.globalAlpha=.85;cx.fill();break;
     case 'confetti': cx.rotate(p.rot);cx.fillStyle=p.c;cx.fillRect(-r/2,-r/4,r,r/2);break;
     case 'spray': cx.beginPath();cx.arc(0,0,r*.45,0,7);cx.fillStyle=p.c;cx.globalAlpha=.8;cx.fill();break;
@@ -231,7 +215,7 @@ function drawP(p){
     case 'petal': cx.rotate(p.rot);cx.beginPath();cx.ellipse(0,0,r*.9,r*.45,0,0,7);cx.fillStyle=Math.random()<.02?p.c:(p.c);cx.globalAlpha=.8;cx.fill();break;
     case 'gold': {cx.rotate(p.rot);const s=r*.9;cx.fillStyle=Math.sin(p.ph*3)>0?'#E8C766':'#C9A24B';cx.globalAlpha=.9;cx.fillRect(-s/2,-s/3,s,s*.66);break}
     case 'pixel': {const s=Math.max(3,Math.round(r*.8));cx.fillStyle=p.c;cx.fillRect(Math.round(-s/2),Math.round(-s/2),s,s);break}
-    case 'sparkle': {cx.rotate(p.rot*.2);const s=r;cx.beginPath();cx.moveTo(0,-s);cx.lineTo(s*.25,-s*.25);cx.lineTo(s,0);cx.lineTo(s*.25,s*.25);cx.lineTo(0,s);cx.lineTo(-s*.25,s*.25);cx.lineTo(-s,0);cx.closePath();cx.fillStyle=p.c;cx.fill();break}
+    case 'sparkle': {cx.rotate(p.rot*.2);const s=r;cx.beginPath();cx.moveTo(0,-s);cx.lineTo(s*.25,-s*.25);cx.lineTo(s,0);cx.lineTo(s*.25,s*.25);cx.lineTo(0,s);cx.lineTo(-s*.25,s*.25);cx.lineTo(-s,0);cx.lineTo(-s*.25,-s*.25);cx.closePath();cx.fillStyle=Math.random()<.5?'#fff':'#FF9AD8';cx.fill();break}
   }
   cx.restore();
 }
